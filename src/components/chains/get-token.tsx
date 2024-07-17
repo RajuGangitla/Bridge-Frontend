@@ -1,5 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { DST_TYPE, SRC_TYPE } from "@/constants/quote";
 import { getAllTokensApi } from "@/services/token";
 import useQuoteStore, { TToken } from "@/store/quote-store";
 import { Loader } from "lucide-react";
@@ -32,7 +33,7 @@ export default function GetAllToken({ type, setOpen }: IGetAllToken) {
                     <div className="flex flex-col gap-2 py-2">
                         {getAllTokens?.data?.recommendedTokens?.length > 0 ? (
                             getAllTokens?.data.recommendedTokens.map((token: any) => (
-                                <div key={token.symbol} className={`flex items-center gap-2 rounded-md hover:bg-gray-700 p-2 transition     ${(type === "src" && src.name === token.name || type === "dst" && dst.name === token.name) ? "cursor-not-allowed" : "cursor-pointer"} `} onClick={() => handleUpdate(token)}>
+                                <div key={token.symbol} className={`flex items-center gap-2 rounded-md hover:bg-gray-700 p-2 transition     ${(type === SRC_TYPE && src.name === token.name || type === DST_TYPE && dst.name === token.name) ? "cursor-not-allowed" : "cursor-pointer"} `} onClick={() => handleUpdate(token)}>
                                     <Avatar>
                                         <AvatarImage src={token.logoURI} alt={token.symbol} />
                                         <AvatarFallback>{token.symbol[0]}</AvatarFallback>

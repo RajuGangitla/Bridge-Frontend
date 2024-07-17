@@ -1,19 +1,21 @@
+"use client"
+
 import { toast } from "@/components/ui/use-toast";
 import api from "@/lib/api";
 import { TToken } from "@/store/quote-store";
 import { roundToDecimals } from "@/utils/roundToDecimals";
 import React from "react";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useMutation, useQuery } from "react-query";
 
 
 export const raiseQuoteApi = (updateField: (<K extends keyof TToken>(type: "src" | "dst", key: K, value: TToken[K]) => void), setResponse: React.Dispatch<React.SetStateAction<any>>) => {
-    const queryclient = useQueryClient()
     return useMutation((data: any) => api.post(`/quotes`, data), {
         onSuccess: async (res) => {
             console.log(res?.data?.routes?.[0]?.dst_quote_token_amount)
             if (res?.data?.errorCode) {
                 toast({
                     title: res?.data?.errorMsg,
+                    variant: "destructive"
                 })
             }
             setResponse(res?.data)
@@ -67,12 +69,12 @@ export const getAllSupportedChainsApi = () =>
     );
 
 export const buildTransactionApi = () => {
-    const queryclient = useQueryClient()
     return useMutation((data: any) => api.post(`/transaction`, data), {
         onSuccess: async (res) => {
             if (res?.data?.errorCode) {
                 toast({
                     title: res?.data?.errorMsg,
+                    variant: "destructive"
                 })
             }
         },

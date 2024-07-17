@@ -15,7 +15,8 @@ import GetAllToken from "../chains/get-token"
 import { ChevronDown } from "lucide-react"
 import { Chain } from "@/types/chain"
 import useQuoteStore from "@/store/quote-store"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { SRC_TYPE } from "@/constants/quote"
+import TokenAvatar from "../chains/token-avatar"
 
 
 interface ITokenDialog {
@@ -32,28 +33,11 @@ export default function TokenDialog({ type }: ITokenDialog) {
             <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
                     <div className="flex items-center justify-between gap-4 p-4 rounded-md bg-slate-800 cursor-pointer w-full md:w-auto">
-                        {type === 'src' ? (
-                            <div className="flex items-center gap-2">
-                                <Avatar>
-                                    <AvatarImage src={src.logoURI} alt={src.symbol} />
-                                    <AvatarFallback>{src.symbol[0] ?? "?"}</AvatarFallback>
-                                </Avatar>
-                                <div>
-                                    <p className="font-semibold text-white text-sm md:text-base">{src.name ? src.name : "Token"}</p>
-                                    <p className="text-xs font-semibold text-gray-500 md:text-sm">{src.symbol ? src.symbol : "Network"}</p>
-                                </div>
-                            </div>
+                        {/* Token Avatar */}
+                        {type === SRC_TYPE ? (
+                            <TokenAvatar logoURI={src?.logoURI} symbol={src?.symbol} name={src?.name} />
                         ) : (
-                            <div className="flex items-center gap-2">
-                                <Avatar>
-                                    <AvatarImage src={dst.logoURI} alt={dst.symbol} />
-                                    <AvatarFallback>{dst.symbol[0] ?? "?"}</AvatarFallback>
-                                </Avatar>
-                                <div>
-                                    <p className="font-semibold text-white text-sm md:text-base">{dst.name ? dst.name : "Token"}</p>
-                                    <p className="text-xs font-semibold text-gray-500 md:text-sm">{dst.symbol ? dst.symbol : "Network"}</p>
-                                </div>
-                            </div>
+                            <TokenAvatar logoURI={dst?.logoURI} symbol={dst?.symbol} name={dst?.name} />
                         )}
                         <ChevronDown className="text-white" size={20} />
                     </div>
@@ -65,6 +49,7 @@ export default function TokenDialog({ type }: ITokenDialog) {
                     </DialogHeader>
                     <ScrollArea className="h-[300px] rounded-md border p-4">
                         <div className="flex flex-wrap gap-4 py-2">
+                            {/* Supported Chains */}
                             {getAllSupportedChains?.data?.supportedChains?.length > 0 &&
                                 getAllSupportedChains?.data?.supportedChains?.map((chain: Chain) => (
                                     <button
@@ -78,6 +63,7 @@ export default function TokenDialog({ type }: ITokenDialog) {
                         </div>
                     </ScrollArea>
                     <div className="mt-4">
+                        {/* All Tokens */}
                         <GetAllToken type={type} setOpen={setOpen} />
                     </div>
                 </DialogContent>
