@@ -15,7 +15,8 @@ import RouteCard from "./route-card";
 export default function Home() {
     const { src, dst, updateField, swap } = useQuoteStore();
     const [response, setResponse] = useState<any>();
-    const { mutate: buildTransaction, isLoading: isLoadingbuildTransaction } = buildTransactionApi()
+    const { mutate: buildTransaction, isLoading: isLoadingbuildTransaction } =
+        buildTransactionApi();
     const { mutate: raiseQuote, isLoading } = raiseQuoteApi(
         updateField,
         setResponse
@@ -36,29 +37,42 @@ export default function Home() {
             dstChainId: dst.chainId,
             dstQuoteTokenAddress: dst.address,
             slippage: 1,
-            receiver: ""
-        }
+            receiver: "",
+        };
         if (response?.routes?.[0]?.bridgeDescription?.bridgeProvider) {
-            data.bridgeProvider = response?.routes?.[0]?.bridgeDescription?.bridgeProvider
+            data.bridgeProvider =
+                response?.routes?.[0]?.bridgeDescription?.bridgeProvider;
         }
         if (response?.routes?.[0]?.bridgeDescription?.srcBridgeTokenAddress) {
-            data.srcBridgeTokenAddress = response?.routes?.[0]?.bridgeDescription?.srcBridgeTokenAddress
+            data.srcBridgeTokenAddress =
+                response?.routes?.[0]?.bridgeDescription?.srcBridgeTokenAddress;
         }
         if (response?.routes?.[0]?.bridgeDescription?.dstBridgeTokenAddress) {
-            data.dstBridgeTokenAddress = response?.routes?.[0]?.bridgeDescription?.dstBridgeTokenAddress
+            data.dstBridgeTokenAddress =
+                response?.routes?.[0]?.bridgeDescription?.dstBridgeTokenAddress;
         }
         if (response?.routes?.[0]?.srcSwapDescription?.provider) {
-            data.srcSwapProvider = response?.routes?.[0]?.srcSwapDescription?.provider
+            data.srcSwapProvider =
+                response?.routes?.[0]?.srcSwapDescription?.provider;
         }
         if (response?.routes?.[0]?.dstSwapDescription?.provider) {
-            data.dstSwapProvider = response?.routes?.[0]?.dstSwapDescription?.provider
+            data.dstSwapProvider =
+                response?.routes?.[0]?.dstSwapDescription?.provider;
         }
-        buildTransaction(data)
-        console.log(data, "data")
-    }
+        buildTransaction(data);
+        console.log(data, "data");
+    };
 
     useEffect(() => {
-        if (src.amount !== undefined && src.amount !== null && src.amount !== 0) {
+        if (
+            src.amount !== undefined &&
+            src.amount !== null &&
+            src.amount !== 0 &&
+            src.chainId !== undefined &&
+            src.address !== "" &&
+            dst.chainId !== undefined &&
+            dst.address !== ""
+        ) {
             let formdata = {
                 srcChainId: src.chainId,
                 srcQuoteTokenAddress: src.address,
@@ -75,43 +89,53 @@ export default function Home() {
     return (
         <>
             <div className="h-screen flex items-center justify-center p-4">
-                <div className="flex flex-col sm:flex-row items-start gap-4 w-full md:w-[80%]">
+                <div className="flex flex-col sm:flex-row items-start gap-4 w-full lg:w-[80%]">
                     <div className="">
-
                         {/* Transer Card */}
                         <TransferCard isLoading={isLoading} />
 
                         {/* Bridge Fee */}
-                        {
-                            response?.routes?.[0]?.bridgeDescription &&
+                        {response?.routes?.[0]?.bridgeDescription && (
                             <div className="flex items-center justify-between p-2">
                                 <p className="text-sm">Bridge Fee</p>
-                                <p className="text-sm">{response?.routes?.[0]?.bridgeDescription?.bridgeFeeAmount / Math.pow(
-                                    10,
-                                    response?.routes?.[0]?.bridgeDescription?.bridgeFeeToken?.decimals || 1
-                                )} {response?.routes?.[0]?.bridgeDescription?.bridgeFeeToken?.symbol}</p>
+                                <p className="text-sm">
+                                    {response?.routes?.[0]?.bridgeDescription?.bridgeFeeAmount /
+                                        Math.pow(
+                                            10,
+                                            response?.routes?.[0]?.bridgeDescription?.bridgeFeeToken
+                                                ?.decimals || 1
+                                        )}{" "}
+                                    {
+                                        response?.routes?.[0]?.bridgeDescription?.bridgeFeeToken
+                                            ?.symbol
+                                    }
+                                </p>
                             </div>
-                        }
+                        )}
 
                         {/* Build Transaction */}
-                        {
-                            response?.routes?.length > 0 && <Button disabled={isLoadingbuildTransaction} onClick={() => handleTransaction(response)} className="w-full my-2 items-center justify-center bg-blue-800 rounded-md p-2 text-gray-300 text-lg font-semibold hover:bg-blue-600">
+                        {response?.routes?.length > 0 && (
+                            <Button
+                                disabled={isLoadingbuildTransaction}
+                                onClick={() => handleTransaction(response)}
+                                className="w-full my-2 items-center justify-center bg-blue-800 rounded-md p-2 text-gray-300 text-lg font-semibold hover:bg-blue-600"
+                            >
                                 Build Transaction
                             </Button>
-                        }
+                        )}
                     </div>
 
                     {isLoading ? (
                         <div className="flex flex-col gap-2">
-                            <Skeleton className="h-48 w-full md:w-[350px]" />
-                            <Skeleton className="h-48 w-full md:w-[350px]" />
+                            <Skeleton className="h-48 w-full lg:w-[350px]" />
+                            <Skeleton className="h-48 w-full lg:w-[350px]" />
                         </div>
                     ) : (
                         <>
                             {response?.routes?.length > 0 && (
                                 <>
                                     {/* Show Routes from quote api */}
-                                    <ScrollArea className="w-full md:w-[350px] h-[400px] overflow-y-auto">
+                                    <ScrollArea className="w-full lg:w-[350px] h-[400px] overflow-y-auto">
                                         <div className=" space-y-2">
                                             {response?.routes?.map((route: any, index: number) => (
                                                 <>
@@ -119,14 +143,13 @@ export default function Home() {
                                                 </>
                                             ))}
                                         </div>
-
                                     </ScrollArea>
                                 </>
                             )}
                         </>
                     )}
                 </div>
-            </div >
+            </div>
         </>
     );
 }
